@@ -1,10 +1,13 @@
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
 import React from "react";
+import { Image } from "react-native";
+import chatlogo from "../assets/images/chatlogo.png";
 
-const Home = () => {
+const StartPage = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.font}>Home</Text>
+      <Image source={chatlogo} />
+      <ActivityIndicator size="large" color="#00E4E3" />
     </View>
   );
 };
@@ -12,7 +15,6 @@ const Home = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "red",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -23,4 +25,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;
+export default StartPage;
