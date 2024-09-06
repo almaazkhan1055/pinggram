@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import React, { useRef, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import login from "../assets/images/login.png";
+import register from "../assets/images/register.png";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -20,16 +20,16 @@ import * as Animatable from "react-native-animatable";
 import { useRouter } from "expo-router";
 import Loading from "../components/Loading";
 
-const Login = () => {
+const Signup = () => {
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
   const emailRef = useRef("");
   const passwordRef = useRef("");
 
-  const handleLogin = async () => {
+  const handleRegister = async () => {
     if (!emailRef.current || !passwordRef.current) {
-      Alert.alert("Login", "Please fill all the fields!");
+      Alert.alert("Sign up", "Please fill all the fields!");
       return;
     }
   };
@@ -48,7 +48,7 @@ const Login = () => {
           <Image
             style={{ height: hp(25) }}
             resizeMode="contain"
-            source={login}
+            source={register}
           />
         </Animatable.View>
         <View style={{ paddingHorizontal: 20, gap: 30 }}>
@@ -61,7 +61,7 @@ const Login = () => {
               color: "black",
             }}
           >
-            Login
+            Sign Up
           </Animatable.Text>
           <View style={{ gap: 16 }}>
             <Animatable.View
@@ -112,57 +112,6 @@ const Login = () => {
                     fontWeight: "400",
                     color: "#404040",
                   }}
-                  placeholder="Enter your username"
-                  placeholderTextColor="gray"
-                />
-              </Animatable.View>
-              <Animatable.View
-                animation="slideInUp"
-                style={{
-                  height: hp(7),
-                  flexDirection: "row",
-                  paddingHorizontal: 10,
-                  gap: 16,
-                  alignItems: "center",
-                  borderRadius: 15,
-                  backgroundColor: "#f3f4f6",
-                }}
-              >
-                <FontAwesome5 name="user-lock" size={hp(2.7)} color="gray" />
-                <TextInput
-                  onChangeText={(value) => (passwordRef.current = value)}
-                  style={{
-                    fontSize: hp(2),
-                    flex: 1,
-                    fontWeight: "400",
-                    color: "#404040",
-                  }}
-                  secureTextEntry={true}
-                  placeholder="Enter your password"
-                  placeholderTextColor="gray"
-                />
-              </Animatable.View>
-              <Animatable.View
-                animation="slideInUp"
-                style={{
-                  height: hp(7),
-                  flexDirection: "row",
-                  paddingHorizontal: 10,
-                  gap: 16,
-                  alignItems: "center",
-                  borderRadius: 15,
-                  backgroundColor: "#f3f4f6",
-                }}
-              >
-                <FontAwesome5 name="user-lock" size={hp(2.7)} color="gray" />
-                <TextInput
-                  onChangeText={(value) => (passwordRef.current = value)}
-                  style={{
-                    fontSize: hp(2),
-                    flex: 1,
-                    fontWeight: "400",
-                    color: "#404040",
-                  }}
                   secureTextEntry={true}
                   placeholder="Enter your password"
                   placeholderTextColor="gray"
@@ -190,7 +139,7 @@ const Login = () => {
               ) : (
                 <Animatable.View animation="slideInLeft">
                   <TouchableOpacity
-                    onPress={handleLogin}
+                    onPress={handleRegister}
                     style={{
                       backgroundColor: "#6366F1",
                       alignItems: "center",
@@ -205,7 +154,7 @@ const Login = () => {
                         fontWeight: "700",
                       }}
                     >
-                      Login
+                      Create account
                     </Text>
                   </TouchableOpacity>
                 </Animatable.View>
@@ -219,9 +168,9 @@ const Login = () => {
               <Text
                 style={{ fontSize: hp(1.8), fontWeight: 500, color: "#737373" }}
               >
-                Don't have an account?{" "}
+                Already have an account?
               </Text>
-              <Pressable onPress={() => router.push("/Signup")}>
+              <Pressable onPress={() => router.push("/Login")}>
                 <Text
                   style={{
                     fontSize: hp(1.8),
@@ -229,7 +178,7 @@ const Login = () => {
                     color: "#6366F1",
                   }}
                 >
-                  Sign up
+                  Login
                 </Text>
               </Pressable>
             </Animatable.View>
@@ -247,4 +196,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default Signup;

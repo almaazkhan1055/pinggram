@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import React, { useEffect } from "react";
-import { Slot, useRouter, useSegments } from "expo-router";
+import { Slot, Stack, useRouter, useSegments } from "expo-router";
 import { AuthContextProvider, useAuth } from "../context/authContext";
 
 const MainLayout = () => {
@@ -14,7 +14,7 @@ const MainLayout = () => {
     if (isAuthenticated && !inApp) {
       router.replace("home");
     } else if (isAuthenticated === false) {
-      router.replace("SignIn");
+      router.replace("Login");
     }
   }, [isAuthenticated]);
 
@@ -28,6 +28,7 @@ const RootLayout = () => {
     </AuthContextProvider>
   );
 };
+
 const styles = StyleSheet.create({
   main: {
     flex: 1,

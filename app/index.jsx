@@ -1,6 +1,5 @@
-import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
+import { StyleSheet, View, Image, ActivityIndicator } from "react-native";
 import React from "react";
-import { Image } from "react-native";
 import chatlogo from "../assets/images/chatlogo.png";
 
 const StartPage = () => {
