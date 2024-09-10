@@ -50,10 +50,10 @@ const SignUp = () => {
       profileRef.current
     );
     setLoading(false);
-    console.log("res", response);
+    // console.log("res", response);
 
     if (!response.success) {
-      Alert.alert("signup", response.message);
+      Alert.alert("signup", response.msg);
     }
   };
   return (
@@ -85,7 +85,7 @@ const SignUp = () => {
                 color: "black",
               }}
             >
-              Signup
+              Sign up
             </Animatable.Text>
             <View style={{ gap: 16 }}>
               <Animatable.View
@@ -232,7 +232,7 @@ const SignUp = () => {
                           fontWeight: "700",
                         }}
                       >
-                        Signup
+                        Create account
                       </Text>
                     </TouchableOpacity>
                   </Animatable.View>
@@ -250,9 +250,9 @@ const SignUp = () => {
                     color: "#737373",
                   }}
                 >
-                  Don't have an account?
+                  Already have an account?
                 </Text>
-                <Pressable onPress={() => router.push("/Signup")}>
+                <Pressable onPress={() => router.push("/Login")}>
                   <Text
                     style={{
                       fontSize: hp(1.8),
@@ -260,7 +260,7 @@ const SignUp = () => {
                       color: "#6366F1",
                     }}
                   >
-                    Sign up
+                    Login
                   </Text>
                 </Pressable>
               </Animatable.View>

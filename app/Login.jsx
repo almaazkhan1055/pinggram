@@ -20,18 +20,27 @@ import * as Animatable from "react-native-animatable";
 import { useRouter } from "expo-router";
 import Loading from "../components/Loading";
 import CustomKeyboardView from "../components/customKeyboardView";
+import { useAuth } from "../context/authContext";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
 
   const router = useRouter();
   const emailRef = useRef("");
   const passwordRef = useRef("");
 
-  const handleRegister = async () => {
+  const handleLogin = async () => {
     if (!emailRef.current || !passwordRef.current) {
       Alert.alert("Login", "Please fill all the fields!");
       return;
+    }
+    setLoading(true);
+    const response = await login(emailRef.current, passwordRef.current);
+    setLoading(false);
+
+    if (!response.success) {
+      Alert.alert("Login", response.msg);
     }
   };
   return (
@@ -141,7 +150,7 @@ const Login = () => {
                 ) : (
                   <Animatable.View animation="slideInLeft">
                     <TouchableOpacity
-                      onPress={handleRegister}
+                      onPress={handleLogin}
                       style={{
                         backgroundColor: "#6366F1",
                         alignItems: "center",
@@ -156,7 +165,7 @@ const Login = () => {
                           fontWeight: "700",
                         }}
                       >
-                        Create account
+                        Login
                       </Text>
                     </TouchableOpacity>
                   </Animatable.View>

@@ -1,10 +1,12 @@
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
 } from "firebase/auth";
 import { createContext, useContext, useEffect, useState } from "react";
 import { auth, db } from "../firebaseConfig";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 export const AuthContext = createContext();
 export const AuthContextProvider = ({ children }) => {
@@ -13,9 +15,12 @@ export const AuthContextProvider = ({ children }) => {
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
+      // console.log("got user: ", user);
+
       if (user) {
         setIsAuthenticated(true);
         setUser(user);
+        updateUserData(user.uid);
       } else {
         setIsAuthenticated(false);
         setUser(null);
@@ -24,10 +29,30 @@ export const AuthContextProvider = ({ children }) => {
     return unsub;
   }, []);
 
+  const updateUserData = async (userId) => {
+    const docRef = doc(db, "users", userId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      let data = docSnap.data();
+      setUser({
+        ...user,
+        username: data.username,
+        profileUrl: data.profileUrl,
+        userId: data.userId,
+      });
+    }
+  };
+
   const login = async (email, password) => {
     try {
-    } catch (error) {
-      console.log(error);
+      const response = await signInWithEmailAndPassword(auth, email, password);
+      return { success: true };
+    } catch (e) {
+      let msg = e.message;
+      if (msg.includes("(auth/invalid-email)")) msg = "Invalid email";
+      if (msg.includes("(auth/invalid-credential)")) msg = "Wrong credentials";
+      return { success: false, msg };
     }
     {
     }
@@ -35,8 +60,10 @@ export const AuthContextProvider = ({ children }) => {
 
   const logout = async () => {
     try {
+      await signOut(auth);
+      return { success: true };
     } catch (error) {
-      console.log(error);
+      return { success: false, msg: error.message, error };
     }
   };
 
@@ -47,18 +74,18 @@ export const AuthContextProvider = ({ children }) => {
         email,
         password
       );
-      console.log("response.user", response?.user);
+      // console.log("response.user", response?.user);
       await setDoc(doc(db, "users", response?.user?.uid), {
         username,
         profileUrl,
         userId: response?.user?.uid,
       });
       return { success: true, data: response?.user };
-    } catch (error) {
-      console.log("CAAATACH");
-
-      let msg = error.message;
-      if (msg.includes("(auth/invalid-email)")) msg = "invalid email";
+    } catch (e) {
+      let msg = e.message;
+      if (msg.includes("(auth/invalid-email)")) msg = "Invalid email";
+      if (msg.includes("(auth/email-already-in-use)"))
+        msg = "Email already exists";
       return { success: false, msg };
     }
   };
