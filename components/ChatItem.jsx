@@ -17,11 +17,12 @@ const ChatItem = ({ item, router, noBorder }) => {
       style={{
         flexDirection: "row",
         justifyContent: "space-between",
-        gap: 3,
-        marginHorizontal: 4,
+        gap: 10,
+        marginHorizontal: 5,
         alignItems: "center",
         marginBottom: 4,
-        paddingBottom: 2,
+        // paddingBottom: 2,
+        paddingVertical: 10,
         borderBottomWidth: `${noBorder ? 0 : 1}`,
         borderBottomColor: "#E5E7EB",
       }}
@@ -29,8 +30,7 @@ const ChatItem = ({ item, router, noBorder }) => {
       <Image
         source={item?.profileUrl}
         style={{
-          height: hp(6),
-          width: wp(6),
+          width: wp(10),
           aspectRatio: 1,
           borderRadius: 50,
         }}
@@ -38,7 +38,12 @@ const ChatItem = ({ item, router, noBorder }) => {
         transition={500}
       />
       <View style={{ flex: 1, gap: 1 }}>
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
           <Text
             style={{
               fontSize: hp(1.8),

@@ -35,8 +35,6 @@ const Home = () => {
           <ActivityIndicator size="large" color="#7d89cd" />
         </View>
       )}
-      {/* <Text style={styles.text}>Home</Text>
-      <Button title="Logout" onPress={handleLogout} /> */}
     </View>
   );
 };
