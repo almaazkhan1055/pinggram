@@ -121,7 +121,6 @@ const ChatRoom = () => {
                 padding: 2,
                 borderRadius: 50,
                 marginVertical: 3,
-                marginBottom: 100,
               }}
             >
               <TextInput
