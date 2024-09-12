@@ -2,7 +2,6 @@ import { View, StyleSheet, ActivityIndicator } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../context/authContext";
 import { StatusBar } from "expo-status-bar";
-import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import ChatList from "../../components/chatList";
 import { getDocs, query, where } from "firebase/firestore";
 import { userRef } from "../../firebaseConfig";
@@ -29,7 +28,7 @@ const Home = () => {
     if (user?.uid) {
       getUsers();
     }
-  }, [user?.uid]); // Added dependency to prevent rerendering
+  }, [user?.uid]);
 
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>

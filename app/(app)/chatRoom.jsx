@@ -5,6 +5,8 @@ import {
   TextInput,
   TouchableOpacity,
   Keyboard,
+  StyleSheet,
+  Alert,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
@@ -95,48 +97,28 @@ const ChatRoom = () => {
 
   return (
     <CustomKeyboardView inChat={true}>
-      <View style={{ flex: 1, backgroundColor: "white" }}>
+      <View style={styles.container}>
         <StatusBar style="dark" />
         <ChatRoomHeader user={item} router={router} />
-        <View
-          style={{
-            height: hp(1),
-            borderBottomColor: "#E5E7EB",
-            borderBottomWidth: 1,
-          }}
-        />
-        <View style={{ flex: 1, backgroundColor: "#F3F4F6" }}>
+        <View style={styles.divider} />
+        <View style={styles.messageContainer}>
           <MessageList
             scrollViewRef={scrollViewRef}
             messages={messages}
             currentUser={user}
           />
-          <View style={{ paddingTop: 2, marginBottom: hp(2.7) }}>
-            <View
-              style={{
-                flexDirection: "row",
-                backgroundColor: "white",
-                borderWidth: 2,
-                borderColor: "#E5E7EB",
-                padding: 2,
-                borderRadius: 50,
-                marginVertical: 3,
-              }}
-            >
+          <View style={styles.inputWrapper}>
+            <View style={styles.inputContainer}>
               <TextInput
                 ref={inputRef}
                 onChangeText={(value) => (textRef.current = value)}
                 placeholder="Type message..."
                 placeholderTextColor="#a0a2a5"
-                style={{ flex: 1, fontSize: hp(2), padding: 2 }}
+                style={styles.textInput}
               />
               <TouchableOpacity
                 onPress={handleSendMessage}
-                style={{
-                  backgroundColor: "#E5E7EB",
-                  padding: 8,
-                  borderRadius: 100,
-                }}
+                style={styles.sendButton}
               >
                 <Feather name="send" size={24} color="#737373" />
               </TouchableOpacity>
@@ -147,5 +129,44 @@ const ChatRoom = () => {
     </CustomKeyboardView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+  },
+  divider: {
+    height: hp(1),
+    borderBottomColor: "#E5E7EB",
+    borderBottomWidth: 1,
+  },
+  messageContainer: {
+    flex: 1,
+    backgroundColor: "#F3F4F6",
+  },
+  inputWrapper: {
+    paddingTop: 2,
+    marginBottom: hp(2.7),
+  },
+  inputContainer: {
+    flexDirection: "row",
+    backgroundColor: "white",
+    borderWidth: 2,
+    borderColor: "#E5E7EB",
+    padding: 2,
+    borderRadius: 50,
+    marginVertical: 3,
+  },
+  textInput: {
+    flex: 1,
+    fontSize: hp(2),
+    padding: 2,
+  },
+  sendButton: {
+    backgroundColor: "#E5E7EB",
+    padding: 8,
+    borderRadius: 100,
+  },
+});
 
 export default ChatRoom;

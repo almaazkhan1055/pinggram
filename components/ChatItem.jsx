@@ -1,4 +1,4 @@
-import { TouchableOpacity, View, Text } from "react-native";
+import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import {
   heightPercentageToDP as hp,
@@ -56,59 +56,69 @@ const ChatItem = ({ item, router, noBorder, currentUser }) => {
   return (
     <TouchableOpacity
       onPress={openChatRoom}
-      style={{
-        flexDirection: "row",
-        justifyContent: "space-between",
-        gap: 10,
-        marginHorizontal: 5,
-        alignItems: "center",
-        marginBottom: 4,
-        paddingVertical: 10,
-        borderBottomWidth: noBorder ? 0 : 1,
-        borderBottomColor: "#E5E7EB",
-      }}
+      style={[
+        styles.touchableContainer,
+        { borderBottomWidth: noBorder ? 0 : 1 },
+      ]}
     >
       <Image
         source={{ uri: item?.profileUrl }}
-        style={{
-          width: wp(10),
-          aspectRatio: 1,
-          borderRadius: 50,
-        }}
+        style={styles.profileImage}
         placeholder={blurhash}
         transition={500}
       />
-      <View style={{ flex: 1, gap: 1 }}>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <Text
-            style={{
-              fontSize: hp(1.8),
-              fontWeight: "600",
-              color: "#1F2937",
-              textTransform: "capitalize",
-            }}
-          >
-            {item?.username}
-          </Text>
-          <Text
-            style={{ fontSize: hp(1.6), fontWeight: "500", color: "#6B7280" }}
-          >
-            {renderTime()}
-          </Text>
+      <View style={styles.textContainer}>
+        <View style={styles.row}>
+          <Text style={styles.usernameText}>{item?.username}</Text>
+          <Text style={styles.timeText}>{renderTime()}</Text>
         </View>
-        <Text
-          style={{ fontSize: hp(1.6), fontWeight: "500", color: "#6B7280" }}
-        >
-          {renderLastMessage()}
-        </Text>
+        <Text style={styles.messageText}>{renderLastMessage()}</Text>
       </View>
     </TouchableOpacity>
   );
 };
+
+const styles = StyleSheet.create({
+  touchableContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: 10,
+    marginHorizontal: 5,
+    alignItems: "center",
+    marginBottom: 4,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#E5E7EB",
+  },
+  profileImage: {
+    width: wp(10),
+    aspectRatio: 1,
+    borderRadius: 50,
+  },
+  textContainer: {
+    flex: 1,
+    gap: 1,
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  usernameText: {
+    fontSize: hp(1.8),
+    fontWeight: "600",
+    color: "#1F2937",
+    textTransform: "capitalize",
+  },
+  timeText: {
+    fontSize: hp(1.6),
+    fontWeight: "500",
+    color: "#6B7280",
+  },
+  messageText: {
+    fontSize: hp(1.6),
+    fontWeight: "500",
+    color: "#6B7280",
+  },
+});
 
 export default ChatItem;

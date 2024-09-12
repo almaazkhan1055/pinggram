@@ -1,8 +1,8 @@
+import { StyleSheet } from "react-native";
 import React, { useEffect } from "react";
 import { Slot, useRouter, useSegments } from "expo-router";
 import { AuthContextProvider, useAuth } from "../context/authContext";
 import { MenuProvider } from "react-native-popup-menu";
-import { StyleSheet, View } from "react-native";
 
 const MainLayout = () => {
   const { isAuthenticated } = useAuth();
@@ -11,26 +11,21 @@ const MainLayout = () => {
 
   useEffect(() => {
     if (typeof isAuthenticated === "undefined") return;
-
     const inApp = segments[0] === "(app)";
-    if (isAuthenticated) {
-      if (!inApp) router.replace("home");
-    } else {
+    if (isAuthenticated && !inApp) {
+      router.replace("home");
+    } else if (isAuthenticated === false) {
       router.replace("Login");
     }
-  }, [isAuthenticated, router, segments]);
+  }, [isAuthenticated]);
 
-  return (
-    <View style={styles.container}>
-      <Slot />
-    </View>
-  );
+  return <Slot />;
 };
 
 const RootLayout = () => {
   return (
     <MenuProvider>
-      <AuthContextProvider>
+      <AuthContextProvider style={styles.main}>
         <MainLayout />
       </AuthContextProvider>
     </MenuProvider>
@@ -38,9 +33,8 @@ const RootLayout = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  main: {
     flex: 1,
   },
 });
-
 export default RootLayout;

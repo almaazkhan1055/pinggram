@@ -5,12 +5,13 @@ import { useRouter } from "expo-router";
 
 const ChatList = ({ users, currentUser }) => {
   const router = useRouter();
+
   return (
     <View style={{ flex: 1 }}>
       <FlatList
         data={users}
-        contentContainerStyle={{ flex: 1, paddingVertical: 25 }}
-        keyExtractor={(item) => Math.random()}
+        contentContainerStyle={{ flexGrow: 1, paddingVertical: 25 }}
+        keyExtractor={(item) => item.userId.toString()}
         showsVerticalScrollIndicator={false}
         renderItem={({ item, index }) => (
           <ChatItem
