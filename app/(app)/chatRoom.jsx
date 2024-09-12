@@ -1,13 +1,14 @@
-import { View, StatusBar, TextInput, TouchableOpacity } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
-import ChatRoomHeader from "../../components/chatRoomHeader";
+import {
+  View,
+  StatusBar,
+  TextInput,
+  TouchableOpacity,
+  Keyboard,
+} from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
-import MessageList from "../../components/messageList";
 import { Feather } from "@expo/vector-icons";
-import CustomKeyboardView from "../../components/customKeyboardView";
-import { useAuth } from "../../context/authContext";
-import { getRoomId } from "../../utils/common";
 import {
   addDoc,
   collection,
@@ -19,18 +20,24 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
+import { useAuth } from "../../context/authContext";
+import { getRoomId } from "../../utils/common";
+import CustomKeyboardView from "../../components/customKeyboardView";
+import ChatRoomHeader from "../../components/chatRoomHeader";
+import MessageList from "../../components/messageList";
 
 const ChatRoom = () => {
   const [messages, setMessages] = useState([]);
-
   const item = useLocalSearchParams();
   const { user } = useAuth();
   const router = useRouter();
   const textRef = useRef("");
   const inputRef = useRef(null);
+  const scrollViewRef = useRef(null);
+
+  const roomId = getRoomId(user?.userId, item?.userId);
 
   const createRoomIfNotExists = async () => {
-    let roomId = getRoomId(user?.userId, item?.userId);
     await setDoc(doc(db, "rooms", roomId), {
       roomId,
       createdAt: Timestamp.fromDate(new Date()),
@@ -38,15 +45,15 @@ const ChatRoom = () => {
   };
 
   const handleSendMessage = async () => {
-    let message = textRef.current.trim();
+    const message = textRef.current.trim();
     if (!message) return;
+
     try {
-      let roomId = getRoomId(user?.userId, item?.userId);
-      const docRef = doc(db, "rooms", roomId);
-      const messagesRef = collection(docRef, "messages");
+      const messagesRef = collection(doc(db, "rooms", roomId), "messages");
       textRef.current = "";
-      if (inputRef) inputRef?.current?.clear();
-      const newDoc = await addDoc(messagesRef, {
+      inputRef?.current?.clear();
+
+      await addDoc(messagesRef, {
         userId: user?.userId,
         text: message,
         profileUrl: user?.profileUrl,
@@ -58,20 +65,32 @@ const ChatRoom = () => {
     }
   };
 
+  const updateScrollView = () => {
+    setTimeout(() => {
+      scrollViewRef?.current?.scrollToEnd({ animated: true });
+    }, 100);
+  };
+
   useEffect(() => {
     createRoomIfNotExists();
-    let roomId = getRoomId(user?.userId, item?.userId);
-    const docRef = doc(db, "rooms", roomId);
-    const messagesRef = collection(docRef, "messages");
+    const messagesRef = collection(doc(db, "rooms", roomId), "messages");
     const q = query(messagesRef, orderBy("createdAt", "asc"));
 
-    let unsub = onSnapshot(q, (snapshot) => {
-      let allMessages = snapshot.docs.map((doc) => {
-        return doc.data();
-      });
-      setMessages([...allMessages]);
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const allMessages = snapshot.docs.map((doc) => doc.data());
+      setMessages(allMessages);
+      updateScrollView();
     });
-    return unsub;
+
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      updateScrollView
+    );
+
+    return () => {
+      unsubscribe();
+      keyboardDidShowListener.remove();
+    };
   }, []);
 
   return (
@@ -86,29 +105,23 @@ const ChatRoom = () => {
             borderBottomWidth: 1,
           }}
         />
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "space-between",
-            backgroundColor: "#F3F4F6",
-            overflow: "visible",
-          }}
-        >
-          <View style={{ flex: 1 }}>
-            <MessageList messages={messages} />
-          </View>
+        <View style={{ flex: 1, backgroundColor: "#F3F4F6" }}>
+          <MessageList
+            scrollViewRef={scrollViewRef}
+            messages={messages}
+            currentUser={user}
+          />
           <View style={{ paddingTop: 2, marginBottom: hp(2.7) }}>
             <View
               style={{
                 flexDirection: "row",
-                justifyContent: "space-between",
                 backgroundColor: "white",
                 borderWidth: 2,
                 borderColor: "#E5E7EB",
                 padding: 2,
                 borderRadius: 50,
-                paddingLeft: 5,
                 marginVertical: 3,
+                marginBottom: 100,
               }}
             >
               <TextInput
@@ -116,23 +129,17 @@ const ChatRoom = () => {
                 onChangeText={(value) => (textRef.current = value)}
                 placeholder="Type message..."
                 placeholderTextColor="#a0a2a5"
-                style={{
-                  flex: 1,
-                  marginRight: 2,
-                  fontSize: hp(2),
-                  padding: 2,
-                }}
+                style={{ flex: 1, fontSize: hp(2), padding: 2 }}
               />
               <TouchableOpacity
                 onPress={handleSendMessage}
                 style={{
                   backgroundColor: "#E5E7EB",
                   padding: 8,
-                  marginRight: 1,
                   borderRadius: 100,
                 }}
               >
-                <Feather name="send" size="24" color="#737373" />
+                <Feather name="send" size={24} color="#737373" />
               </TouchableOpacity>
             </View>
           </View>

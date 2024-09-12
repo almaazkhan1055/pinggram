@@ -6,7 +6,6 @@ import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { Image } from "expo-image";
 
 const ChatRoomHeader = ({ user, router }) => {
-  console.log("user", user);
   return (
     <Stack.Screen
       options={{

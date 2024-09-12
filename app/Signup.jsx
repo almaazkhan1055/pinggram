@@ -50,7 +50,6 @@ const SignUp = () => {
       profileRef.current
     );
     setLoading(false);
-    // console.log("res", response);
 
     if (!response.success) {
       Alert.alert("signup", response.msg);

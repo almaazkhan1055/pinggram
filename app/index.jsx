@@ -17,11 +17,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  font: {
-    color: "white",
-    fontWeight: "700",
-    fontSize: "50px",
-  },
 });
 
 export default StartPage;

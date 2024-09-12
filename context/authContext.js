@@ -15,8 +15,6 @@ export const AuthContextProvider = ({ children }) => {
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
-      console.log("got user: ", user);
-
       if (user) {
         setIsAuthenticated(true);
         setUser(user);
@@ -74,7 +72,6 @@ export const AuthContextProvider = ({ children }) => {
         email,
         password
       );
-      // console.log("response.user", response?.user);
       await setDoc(doc(db, "users", response?.user?.uid), {
         username,
         profileUrl,
