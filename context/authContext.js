@@ -14,17 +14,19 @@ export const AuthContextProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(undefined);
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setIsAuthenticated(true);
-        setUser(user);
-        updateUserData(user.uid);
-      } else {
-        setIsAuthenticated(false);
-        setUser(null);
-      }
-    });
-    return unsub;
+    setTimeout(() => {
+      const unsub = onAuthStateChanged(auth, (user) => {
+        if (user) {
+          setIsAuthenticated(true);
+          setUser(user);
+          updateUserData(user.uid);
+        } else {
+          setIsAuthenticated(false);
+          setUser(null);
+        }
+      });
+      return unsub;
+    }, 4000);
   }, []);
 
   const updateUserData = async (userId) => {
